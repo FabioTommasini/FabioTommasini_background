@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My First Build</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(rgba(10, 20, 50, 0.55), rgba(10, 20, 50, 0.55)),
+                  url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80')
+                  center / cover no-repeat fixed;
+      text-align: center;
+      padding: 0 1.5rem;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #7db3ff;
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    blockquote {
+      max-width: 600px;
+      color: #eaf1ff;
+      font-size: 1.3rem;
+      font-style: italic;
+      line-height: 1.6;
+      margin: 0;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    blockquote footer {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      font-style: normal;
+      color: #b7cdfa;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, blockquote, nav {
+      animation: fadeInUp 0.9s ease-out both;
+    }
+
+    blockquote { animation-delay: 0.2s; }
+    nav { animation-delay: 0.4s; }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    nav a {
+      position: relative;
+      display: block;
+      width: 220px;
+      height: 130px;
+      border-radius: 10px;
+      overflow: hidden;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    nav a:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+    }
+
+    nav a img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.6);
+      transition: filter 0.3s ease, transform 0.4s ease;
+    }
+
+    nav a:hover img {
+      filter: brightness(0.4);
+      transform: scale(1.08);
+    }
+
+    nav a span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.6rem;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.05rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <h1>My First Build</h1>
+  <blockquote>
+    "The journey of a thousand miles begins with a single step."
+    <footer>&mdash; Lao Tzu</footer>
+  </blockquote>
+  <nav>
+    <a href="about.html">
+      <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=60" alt="About">
+      <span>About</span>
+    </a>
+    <a href="projects.html">
+      <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=60" alt="Projects">
+      <span>Projects</span>
+    </a>
+  </nav>
+</body>
+</html>
