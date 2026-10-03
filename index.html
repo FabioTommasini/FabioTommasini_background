@@ -240,22 +240,24 @@
   /* capability ledger — rows, not cards */
   .caps{ list-style:none; margin:0; padding:0; border-top:1px solid var(--line-2); }
   .cap{
-    display:grid; grid-template-columns:2.6rem minmax(0,15rem) minmax(0,1fr); gap:0.5rem 1.5rem; align-items:start;
-    padding:1.5rem 1rem 1.5rem 0.25rem; border-bottom:1px solid var(--line); position:relative;
-    transition:background-color .3s ease;
+    display:grid; grid-template-columns:2.6rem minmax(0,1fr); gap:0 1.5rem; align-items:start;
+    padding:1.25rem 1rem 1.25rem 0.25rem; border-bottom:1px solid var(--line); position:relative;
+    transition:background-color .6s ease, padding .7s var(--ease-out);
   }
+  .cap:focus-visible{ outline:2px solid var(--accent-deep); outline-offset:-2px; }
   .cap::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease-out); }
-  .cap:hover{ background:linear-gradient(90deg, var(--accent-wash), transparent 70%); }
-  .cap:hover::after{ transform:scaleX(1); }
+  .cap:hover, .cap:focus-visible, .cap.is-open{ background:linear-gradient(90deg, var(--accent-wash), transparent 70%); padding-bottom:1.6rem; }
+  .cap:hover::after, .cap:focus-visible::after, .cap.is-open::after{ transform:scaleX(1); }
   .cap-icon{ width:2.4rem; height:2.4rem; border-radius:9px; border:1px solid var(--line-2); display:grid; place-items:center; color:var(--accent-deep); font-size:1.2rem; background:var(--surf); transition:background-color .3s ease, border-color .3s ease, color .3s ease; }
   .cap-icon .i{ stroke-width:1.6; }
-  .cap:hover .cap-icon{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .cap:hover .cap-icon, .cap:focus-visible .cap-icon, .cap.is-open .cap-icon{ background:var(--accent); border-color:var(--accent); color:#fff; }
   .cap h3{ font-size:1.04rem; font-weight:600; line-height:1.35; padding-top:0.45rem; }
-  .cap p{ font-size:0.95rem; color:var(--ink-dim); line-height:1.65; padding-top:0.45rem; }
-  @media (max-width:720px){
-    .cap{ grid-template-columns:2.6rem minmax(0,1fr); }
-    .cap p{ grid-column:2; padding-top:0; }
-  }
+  /* description stays tucked under the title until the row is hovered or focused */
+  .cap p{ grid-column:2; max-width:62ch; font-size:0.95rem; color:var(--ink-dim); line-height:1.65; max-height:0; opacity:0; overflow:hidden; transform:translateY(-4px);
+    transition:max-height .9s var(--ease-out), opacity .6s ease, transform .7s var(--ease-out), padding .7s var(--ease-out); }
+  .cap:hover p, .cap:focus-visible p, .cap.is-open p{ max-height:12rem; opacity:1; transform:none; padding-top:0.5rem; }
+  @media (hover:none){ .cap{ cursor:pointer; -webkit-tap-highlight-color:transparent; } .cap:hover:not(.is-open){ background:none; padding-bottom:1.25rem; } .cap:hover:not(.is-open) p{ max-height:0; opacity:0; padding-top:0; } .cap:hover:not(.is-open)::after{ transform:scaleX(0); } .cap:hover:not(.is-open) .cap-icon{ background:var(--surf); border-color:var(--line-2); color:var(--accent-deep); } }
+  @media (prefers-reduced-motion:reduce){ .cap, .cap p{ transition:none; } }
 
   /* AI practice — the transformation ledger (signature) */
   .shift{ margin:2.8rem 0 1.4rem; border:1px solid var(--line); border-radius:16px; background:var(--surf); overflow:hidden; }
@@ -287,12 +289,24 @@
   }
   .also-group{ margin-bottom:3rem; }
   .also-group .h3-label{ margin-bottom:0.9rem; }
-  .also-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr)); gap:1rem; }
-  .also{ display:flex; gap:1rem; align-items:flex-start; padding:1.2rem 1.4rem; border:1px dashed var(--line-2); border-radius:var(--r-tile); background:rgba(255,255,255,0.45); }
-  .also .i{ font-size:1.3rem; color:var(--accent-deep); stroke-width:1.6; margin-top:0.1rem; }
+  .also-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr)); gap:1rem; align-items:start; }
+  .also{ border:1px dashed var(--line-2); border-radius:var(--r-tile); background:rgba(255,255,255,0.45); transition:border-color .3s, background-color .3s; }
+  .also-head{ all:unset; box-sizing:border-box; width:100%; display:flex; gap:1rem; align-items:flex-start; padding:1.2rem 1.4rem; cursor:pointer; border-radius:var(--r-tile); min-height:var(--also-h, auto); text-align:left; }
+  .also-head:focus-visible{ outline:2px solid var(--accent-deep); outline-offset:2px; }
+  .also-head > div{ flex:1; }
+  .also:hover, .also.is-open{ border-color:var(--accent-deep); background:rgba(255,255,255,0.7); }
+  .also .i{ font-size:1.3rem; color:var(--accent-deep); stroke-width:1.6; margin-top:0.1rem; flex:none; }
+  .also-chev{ width:1rem; height:1rem; flex:none; margin-top:0.35rem; fill:none; stroke:var(--ink-dim); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .6s var(--ease-out); }
+  .also.is-open .also-chev{ transform:rotate(180deg); }
   .also h4{ font-size:1rem; font-weight:600; margin:0; }
   .also .also-kind{ margin-top:0;  font-family:var(--mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:0.3rem; }
-  .also p{ font-size:0.9rem; color:var(--ink-dim); line-height:1.6; margin-top:0.2rem; }
+  /* body animates 0fr -> 1fr so opening and closing are both smooth; every open body shares the tallest description's height */
+  .also-body{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .7s var(--ease-out); }
+  .also.is-open .also-body{ grid-template-rows:1fr; }
+  .also-body > div{ overflow:hidden; min-height:0; }
+  .also-body p{ box-sizing:border-box; min-height:var(--also-p, auto); font-size:0.95rem; color:var(--ink-dim); line-height:1.7; margin:0 1.4rem; padding:0.9rem 0 1.3rem; border-top:1px solid var(--line); opacity:0; transform:translateY(-4px); transition:opacity .5s ease, transform .7s var(--ease-out); }
+  .also.is-open .also-body p{ opacity:1; transform:none; transition-delay:.12s; }
+  @media (prefers-reduced-motion:reduce){ .also-body, .also-body p, .also-chev{ transition:none; } }
 
   .certs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr)); gap:1rem; list-style:none; margin:0.9rem 0 0; padding:0; }
   .cert{ display:flex; align-items:center; gap:0.9rem; border:1px solid var(--line-2); border-radius:var(--r-tile); padding:1rem 1.25rem; background:var(--page); }
@@ -439,27 +453,27 @@
         </ol>
 
         <ul class="caps" data-reveal aria-label="What the role covers">
-          <li class="cap">
+          <li class="cap" tabindex="0">
             <span class="cap-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.4"/><circle cx="19" cy="6" r="2.4"/><circle cx="19" cy="18" r="2.4"/><path d="M7.1 11 16.9 6.9M7.1 13 16.9 17.1"/></svg></span>
             <h3>Out-licensing process management</h3>
             <p>End-to-end management of the out-licensing process for clients: global and regional partner identification, outreach materials and data rooms, CDA execution, partnering conference support, and facilitating management presentations.</p>
           </li>
-          <li class="cap">
+          <li class="cap" tabindex="0">
             <span class="cap-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M4 19V9M10 19V4M16 19v-7M22 19H2"/></svg></span>
             <h3>Deal benchmarking &amp; NPV modelling</h3>
             <p>Benchmarking against Cortellis and BioSci DB, with adaptable NPV models built to support term sheet negotiation.</p>
           </li>
-          <li class="cap">
+          <li class="cap" tabindex="0">
             <span class="cap-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20 15.6 15.6"/></svg></span>
             <h3>Target identification &amp; triage</h3>
             <p>Identifying potential M&amp;A targets and triaging early- and late-stage in-licensing opportunities from Evaluate Pharma, S&amp;P Capital IQ, PitchBook, and partnering conferences.</p>
           </li>
-          <li class="cap">
+          <li class="cap" tabindex="0">
             <span class="cap-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M3 12c2.5-5 6-7 9-7s6.5 2 9 7c-2.5 5-6 7-9 7s-6.5-2-9-7Z"/><circle cx="12" cy="12" r="2.6"/></svg></span>
             <h3>Landscape &amp; catalyst monitoring</h3>
             <p>Ad-hoc competitive landscaping and catalyst monitoring to keep clients ahead of a fast-moving market.</p>
           </li>
-          <li class="cap">
+          <li class="cap" tabindex="0">
             <span class="cap-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="18" cy="8" r="2.4"/><path d="M16.5 14.3c2.7.4 4.5 2.4 4.5 5.7"/></svg></span>
             <h3>Client delivery &amp; leadership</h3>
             <p>Leading project delivery and client presentations — and, at Director level, line management.</p>
@@ -501,25 +515,73 @@
             <div class="shift-arrow" aria-hidden="true"></div>
             <div class="shift-to" role="cell">
               <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/></svg>
-              <div><h3>Competitive landscape builders</h3><p>Automated pipeline and catalyst mapping that refreshes as the market moves.</p></div>
+              <div><h3>Competitive landscape builders</h3><p>Automated pipeline and catalyst mapping for up-to-date views and market moves.</p></div>
             </div>
           </div>
         </div>
 
         <div class="also-group" data-reveal>
-          <h3 class="h3-label" id="skills-h">Examples of custom-built skills &amp; tools</h3>
+          <h3 class="h3-label" id="skills-h">Other examples of custom-built skills &amp; tools</h3>
           <ul class="also-list" aria-labelledby="skills-h">
-            <li class="also">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3.5H6.5a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V8z"/><path d="M14 3.5V8h4.5M8.5 12.5h7M8.5 16h4"/><path d="m15.5 17.5 1.5 1.5 3-3"/></svg>
-              <div><p class="also-kind">Custom skill</p><h4>CDA redline review</h4><p>Reviews and redlines confidentiality agreements for life-sciences BD.</p></div>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-1">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3.5H6.5a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V8z"/><path d="M14 3.5V8h4.5M8.5 12.5h7M8.5 16h4"/><path d="m15.5 17.5 1.5 1.5 3-3"/></svg>
+                  <div><p class="also-kind">Custom skill</p><h4>CDA redline review</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-1"><div><p>Reviews and redlines confidentiality agreements for life-sciences BD against company guidelines — preferred terms, governing law, governance and more — and suggests common ground to reach signature faster.</p></div></div>
+              </div>
             </li>
-            <li class="also">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8.5 20h7M7 8.5h6M7 11.5h4"/><path d="M15.5 12V8.5"/><path d="M17.5 12v-2"/></svg>
-              <div><p class="also-kind">Custom skill</p><h4>House-style slide and report building</h4><p>Builds client-ready slides and reports that follow the house style.</p></div>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-2">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8.5 20h7M7 8.5h6M7 11.5h4"/><path d="M15.5 12V8.5"/><path d="M17.5 12v-2"/></svg>
+                  <div><p class="also-kind">Custom skill</p><h4>House-style slide and report building</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-2"><div><p>Builds client-ready slides and reports that follow the house style.</p></div></div>
+              </div>
             </li>
-            <li class="also">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h11M15 12l-3.5-3.5M15 12l-3.5 3.5"/><path d="M17 5.5h3v13h-3"/></svg>
-              <div><p class="also-kind">Tool</p><h4>Outreach dashboards</h4><p>Partner outreach tracked automatically across a live process.</p></div>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-3">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h11M15 12l-3.5-3.5M15 12l-3.5 3.5"/><path d="M17 5.5h3v13h-3"/></svg>
+                  <div><p class="also-kind">Tool</p><h4>Outreach dashboards</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-3"><div><p>Partner outreach tracked automatically, ensuring confidentiality throughout the process.</p></div></div>
+              </div>
+            </li>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-4">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11.5a1 1 0 0 1 1 1V18a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5.5a1 1 0 0 1 1-1z"/><path d="M17.5 9h2a.5.5 0 0 1 .5.5V18a2 2 0 0 1-2 2"/><path d="M7.5 8.5h6.5M7.5 12h6.5M7.5 15.5h4"/></svg>
+                  <div><p class="also-kind">Custom skill</p><h4>Daily deal &amp; competitive intelligence brief</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-4"><div><p>Recent deals and competitive intelligence gathered and delivered to my desk every morning.</p></div></div>
+              </div>
+            </li>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-5">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M8 13.5h3M8 16.5h6"/></svg>
+                  <div><p class="also-kind">Custom skill</p><h4>Meeting prep</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-5"><div><p>Gathers context ahead of each meeting, conducts company intelligence and suggests angles for the discussion.</p></div></div>
+              </div>
+            </li>
+            <li>
+              <div class="also">
+                <button type="button" class="also-head" aria-expanded="false" aria-controls="also-6">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3.5h5M10.5 3.5v6L5 18.5a1.3 1.3 0 0 0 1.1 2h11.8a1.3 1.3 0 0 0 1.1-2l-5.5-9v-6"/><path d="M7.5 14.5h9"/></svg>
+                  <div><p class="also-kind">Custom skill</p><h4>Clinical-trial landscape</h4></div>
+                  <svg class="also-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="also-body" id="also-6"><div><p>Maps the competitive clinical-trial landscape and the pivotal programmes behind approved drugs in a given indication, using the ClinicalTrials.gov connector — built for valuation work.</p></div></div>
+              </div>
             </li>
           </ul>
         </div>
@@ -942,6 +1004,33 @@
     zone.addEventListener('mouseleave', function () { halo.style.opacity = '0'; });
   });
 
+})();
+
+/* skills & tools: equal heights (closed and open), smooth click-to-expand */
+(() => {
+  const list = document.querySelector('.also-list'); if (!list) return;
+  const fit = () => {
+    list.style.removeProperty('--also-h'); list.style.removeProperty('--also-p');
+    const max = sel => Math.max(...[...list.querySelectorAll(sel)].map(e => e.offsetHeight));
+    list.style.setProperty('--also-h', max('.also-head') + 'px');
+    list.style.setProperty('--also-p', max('.also-body p') + 'px');
+  };
+  list.querySelectorAll('.also-head').forEach(h => h.addEventListener('click', () => {
+    const open = h.parentElement.classList.toggle('is-open');
+    h.setAttribute('aria-expanded', String(open));
+  }));
+  fit(); addEventListener('resize', fit); document.fonts && document.fonts.ready.then(fit);
+})();
+
+/* role rows: on touch screens (no hover) a tap opens and closes the description */
+(() => {
+  const touch = matchMedia('(hover:none)');
+  document.querySelectorAll('.cap').forEach(c => {
+    c.setAttribute('aria-expanded', 'false');
+    const toggle = () => c.setAttribute('aria-expanded', String(c.classList.toggle('is-open')));
+    c.addEventListener('click', () => { if (touch.matches) toggle(); });
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+  });
 })();
 </script>
 </body>
