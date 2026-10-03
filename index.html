@@ -210,7 +210,8 @@
   .h2 + .lede, .h2 + .body{ margin-top:1.5rem; }
   @media (max-width:900px){
     .ledger-grid{ grid-template-columns:1fr; gap:0; }
-    .margin{ display:none; }
+    .margin{ margin-bottom:1.1rem; }
+    .margin-inner{ position:static; width:max-content; max-width:100%; padding-top:0.75rem; }
   }
 
   /* about */
@@ -608,20 +609,26 @@
   var convai = document.querySelector('elevenlabs-convai'), convaiOpen = false, convaiActive = false;
   function convaiLabels() {
     var r = convai && convai.shadowRoot;
-    return r ? Array.prototype.map.call(r.querySelectorAll('button'), function (b) { return ((b.getAttribute('aria-label') || '') + ' ' + b.textContent).toLowerCase(); }) : [];
+    return r ? Array.prototype.map.call(r.querySelectorAll('button'), function (b) { return (b.getAttribute('aria-label') || b.textContent || '').trim().toLowerCase(); }) : [];
   }
-  function convaiIdle() {
-    var l = convaiLabels();
-    return l.some(function (t) { return /start a call/.test(t); }) && l.some(function (t) { return /message/.test(t); }) && !l.some(function (t) { return /cancel|accept/.test(t); });
+  /* "open" = the chat panel is expanded (it carries a "Collapse" toggle) or the terms prompt is up */
+  function convaiShowing() {
+    return convaiLabels().some(function (t) { return t === 'collapse' || t === 'cancel' || t === 'accept'; });
+  }
+  var convaiOpenedAt = 0, convaiHideTimer = null;
+  function convaiCheck() {
+    if (!convaiOpen) return;
+    if (convaiShowing()) { convaiActive = true; clearTimeout(convaiHideTimer); convaiHideTimer = null; return; }
+    if (!convaiActive || convaiHideTimer || performance.now() - convaiOpenedAt < 1500) return;
+    convaiHideTimer = setTimeout(function () { /* still closed half a second later: dock it again */
+      convaiHideTimer = null;
+      if (convaiOpen && !convaiShowing()) { convaiOpen = convaiActive = false; convai.classList.remove('is-open'); }
+    }, 500);
   }
   (function watch(tries) {
     if (!convai) return;
     if (!convai.shadowRoot) { if (tries < 60) setTimeout(function () { watch(tries + 1); }, 250); return; }
-    new MutationObserver(function () {
-      if (!convaiOpen) return;
-      if (!convaiIdle()) convaiActive = true;
-      else if (convaiActive) { convaiOpen = convaiActive = false; convai.classList.remove('is-open'); }
-    }).observe(convai.shadowRoot, { subtree: true, childList: true, attributes: true, characterData: true });
+    new MutationObserver(convaiCheck).observe(convai.shadowRoot, { subtree: true, childList: true, attributes: true, characterData: true });
   })(0);
   document.querySelectorAll('[data-assistant]').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -631,8 +638,9 @@
         return /message|chat/i.test((b.getAttribute('aria-label') || '') + ' ' + b.textContent);
       });
       e.preventDefault();
-      convai.classList.add('is-open'); convaiOpen = true; convaiActive = !btn;
+      convai.classList.add('is-open'); convaiOpen = true; convaiActive = false; convaiOpenedAt = performance.now();
       if (btn) btn.click();
+      setTimeout(convaiCheck, 1600); /* re-check after the grace period even if nothing mutates */
     });
   });
 
