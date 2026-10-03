@@ -138,6 +138,15 @@
   }
   .book:hover{ background:var(--accent-lt-2); border-color:var(--accent-lt-2); color:var(--bk-bg); box-shadow:var(--lift-dark); transform:translateY(-1px); }
   .book .i{ font-size:1rem; }
+  .book-txt{ display:flex; flex-direction:column; font-size:0.68rem; line-height:1.25; letter-spacing:0.03em; }
+  .book-txt span:first-child{ font-weight:500; opacity:.82; }
+  .hdr-actions .book{ padding:0.38rem 1rem; }
+  @media (max-width:480px){
+    .brand{ font-size:0.76rem; letter-spacing:0.03em; gap:0.5rem; }
+    .hdr-actions .book{ padding:0.36rem 0.8rem; }
+    .hdr-actions .book .i{ display:none; }
+    .book-txt{ font-size:0.62rem; letter-spacing:0; }
+  }
   .nav a{ white-space:nowrap; }
   @media (max-width:900px){ .hdr-actions .connect{ display:none; } }
   @media (max-width:760px){ .nav{ display:none; } }
@@ -389,7 +398,7 @@
     </nav>
     <div class="hdr-actions">
       <a class="connect" href="https://www.linkedin.com/in/fabio-tommasini" target="_blank" rel="noopener" aria-label="Connect on LinkedIn (opens in a new tab)">Connect<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ext"/></svg></a>
-      <a class="book" href="#contact" data-assistant aria-label="Book a call with my AI assistant">Book a call<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chat"/></svg></a>
+      <a class="book" href="#contact" data-assistant aria-label="Also building with AI? Let's compare notes: book a call with my AI assistant"><span class="book-txt"><span>Also building with AI?</span><span>Let's compare notes</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chat"/></svg></a>
     </div>
   </div>
 </header>
